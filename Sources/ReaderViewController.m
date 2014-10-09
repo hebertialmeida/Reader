@@ -74,8 +74,8 @@
 #define TOOLBAR_HEIGHT 44.0f
 #define PAGEBAR_HEIGHT 48.0f
 
-#define SCROLLVIEW_OUTSET_SMALL 4.0f
-#define SCROLLVIEW_OUTSET_LARGE 8.0f
+#define SCROLLVIEW_OUTSET_SMALL 0.0f
+#define SCROLLVIEW_OUTSET_LARGE 0.0f
 
 #define TAP_AREA_SIZE 48.0f
 
@@ -326,7 +326,7 @@
 
 	assert(document != nil); // Must have a valid ReaderDocument
 
-	self.view.backgroundColor = [UIColor grayColor]; // Neutral gray
+	self.view.backgroundColor = [UIColor blackColor];
 
 	UIView *fakeStatusBar = nil; CGRect viewRect = self.view.bounds; // View bounds
 
