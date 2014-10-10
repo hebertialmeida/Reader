@@ -64,6 +64,8 @@
 		45AB7325141FC0B1003524C3 /* ThumbsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45AB7312141FC0B1003524C3 /* ThumbsViewController.m */; };
 		45BD5AFE13AE721A00D6FE97 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45BD5AFD13AE721A00D6FE97 /* MessageUI.framework */; };
 		45D5ADA31610EADD00706B9A /* ReaderDocumentOutline.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D5ADA21610EADC00706B9A /* ReaderDocumentOutline.m */; };
+		995C925619E719C00095ABF1 /* ReaderCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 995C925519E719C00095ABF1 /* ReaderCollectionCell.m */; };
+		99BB715419E6C72300C34E0D /* ReaderMainCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 99BB715319E6C72300C34E0D /* ReaderMainCollection.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -155,6 +157,10 @@
 		45D5ADA11610EADC00706B9A /* ReaderDocumentOutline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReaderDocumentOutline.h; path = Sources/ReaderDocumentOutline.h; sourceTree = "<group>"; };
 		45D5ADA21610EADC00706B9A /* ReaderDocumentOutline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReaderDocumentOutline.m; path = Sources/ReaderDocumentOutline.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Reader-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Reader-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		995C925419E719C00095ABF1 /* ReaderCollectionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReaderCollectionCell.h; path = Sources/ReaderCollectionCell.h; sourceTree = "<group>"; };
+		995C925519E719C00095ABF1 /* ReaderCollectionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReaderCollectionCell.m; path = Sources/ReaderCollectionCell.m; sourceTree = "<group>"; };
+		99BB715219E6C72300C34E0D /* ReaderMainCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReaderMainCollection.h; path = Sources/ReaderMainCollection.h; sourceTree = "<group>"; };
+		99BB715319E6C72300C34E0D /* ReaderMainCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReaderMainCollection.m; path = Sources/ReaderMainCollection.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -315,6 +321,10 @@
 				45AB72FC141FC0B1003524C3 /* ReaderMainToolbar.m */,
 				45AB72F9141FC0B1003524C3 /* ReaderMainPagebar.h */,
 				45AB72FA141FC0B1003524C3 /* ReaderMainPagebar.m */,
+				99BB715219E6C72300C34E0D /* ReaderMainCollection.h */,
+				99BB715319E6C72300C34E0D /* ReaderMainCollection.m */,
+				995C925419E719C00095ABF1 /* ReaderCollectionCell.h */,
+				995C925519E719C00095ABF1 /* ReaderCollectionCell.m */,
 				45AB72F5141FC0B1003524C3 /* ReaderContentView.h */,
 				45AB72F6141FC0B1003524C3 /* ReaderContentView.m */,
 				45AB72F1141FC0B1003524C3 /* ReaderContentPage.h */,
@@ -443,7 +453,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				99BB715419E6C72300C34E0D /* ReaderMainCollection.m in Sources */,
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
+				995C925619E719C00095ABF1 /* ReaderCollectionCell.m in Sources */,
 				45AB72EB141FC0A2003524C3 /* ReaderAppDelegate.m in Sources */,
 				45AB72EC141FC0A2003524C3 /* ReaderDemoController.m in Sources */,
 				45AB7313141FC0B1003524C3 /* CGPDFDocument.m in Sources */,

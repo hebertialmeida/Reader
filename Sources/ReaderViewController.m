@@ -27,15 +27,16 @@
 #import "ReaderViewController.h"
 #import "ThumbsViewController.h"
 #import "ReaderMainToolbar.h"
-#import "ReaderMainPagebar.h"
+#import "ReadermainCollection.h"
+#import "ReaderMainCollection.h"
 #import "ReaderContentView.h"
 #import "ReaderThumbCache.h"
 #import "ReaderThumbQueue.h"
 
 #import <MessageUI/MessageUI.h>
 
-@interface ReaderViewController () <UIScrollViewDelegate, UIGestureRecognizerDelegate, MFMailComposeViewControllerDelegate, UIDocumentInteractionControllerDelegate,
-									ReaderMainToolbarDelegate, ReaderMainPagebarDelegate, ReaderContentViewDelegate, ThumbsViewControllerDelegate>
+@interface ReaderViewController () <UIScrollViewDelegate, UIGestureRecognizerDelegate, MFMailComposeViewControllerDelegate, UIDocumentInteractionControllerDelegate, UICollectionViewDelegate,
+									ReaderMainToolbarDelegate, ReaderContentViewDelegate, ThumbsViewControllerDelegate>
 @end
 
 @implementation ReaderViewController
@@ -45,8 +46,8 @@
 	UIScrollView *theScrollView;
 
 	ReaderMainToolbar *mainToolbar;
-
-	ReaderMainPagebar *mainPagebar;
+    
+    ReaderMainCollection *mainCollection;
 
 	NSMutableDictionary *contentViews;
 
@@ -72,7 +73,7 @@
 #define STATUS_HEIGHT 20.0f
 
 #define TOOLBAR_HEIGHT 44.0f
-#define PAGEBAR_HEIGHT 48.0f
+#define PAGEBAR_HEIGHT 200.0f
 
 #define SCROLLVIEW_OUTSET_SMALL 0.0f
 #define SCROLLVIEW_OUTSET_LARGE 0.0f
@@ -121,8 +122,6 @@
 	}
 
 	[mainToolbar setBookmarkState:[document.bookmarks containsIndex:page]];
-
-	[mainPagebar updatePagebar]; // Update page bar
 }
 
 - (void)addContentView:(UIScrollView *)scrollView page:(NSInteger)page
@@ -222,8 +221,6 @@
 		];
 
 		[mainToolbar setBookmarkState:[document.bookmarks containsIndex:page]];
-
-		[mainPagebar updatePagebar]; // Update page bar
 	}
 }
 
@@ -250,8 +247,6 @@
 		];
 
 		[mainToolbar setBookmarkState:[document.bookmarks containsIndex:page]];
-
-		[mainPagebar updatePagebar]; // Update page bar
 	}
 }
 
@@ -359,11 +354,23 @@
 	mainToolbar.delegate = self; // ReaderMainToolbarDelegate
 	[self.view addSubview:mainToolbar];
 
-	CGRect pagebarRect = self.view.bounds; pagebarRect.size.height = PAGEBAR_HEIGHT;
+	CGRect pagebarRect = self.view.bounds;
+    pagebarRect.size.height = PAGEBAR_HEIGHT;
 	pagebarRect.origin.y = (self.view.bounds.size.height - pagebarRect.size.height);
-	mainPagebar = [[ReaderMainPagebar alloc] initWithFrame:pagebarRect document:document]; // ReaderMainPagebar
-	mainPagebar.delegate = self; // ReaderMainPagebarDelegate
-	[self.view addSubview:mainPagebar];
+//	mainCollection = [[ReadermainCollection alloc] initWithFrame:pagebarRect document:document]; // ReadermainCollection
+//	mainCollection.delegate = self; // ReadermainCollectionDelegate
+//	[self.view addSubview:mainCollection];
+    
+    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+    layout.sectionInset = UIEdgeInsetsMake(0, 10, 0, 0);
+    layout.itemSize = CGSizeMake(110, 140);
+    layout.minimumLineSpacing = 1;
+    layout.minimumInteritemSpacing = 0;
+    layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    
+    mainCollection = [[ReaderMainCollection alloc] initWithFrame:pagebarRect collectionViewLayout:layout document:document];
+    mainCollection.delegate = self;
+    [self.view addSubview:mainCollection];
 
 	if (fakeStatusBar != nil) [self.view addSubview:fakeStatusBar]; // Add status bar background view
 
@@ -441,7 +448,7 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	mainToolbar = nil; mainPagebar = nil;
+	mainToolbar = nil; mainCollection = nil;
 
 	theScrollView = nil; contentViews = nil; lastHideTime = nil;
 
@@ -500,17 +507,30 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-	if (ignoreDidScroll == NO) [self layoutContentViews:scrollView];
+    if (scrollView == theScrollView) {
+        if (ignoreDidScroll == NO) [self layoutContentViews:scrollView];
+    }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
-	[self handleScrollViewDidEnd:scrollView];
+    if (scrollView == theScrollView) {
+        [self handleScrollViewDidEnd:scrollView];
+    }
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
 {
-	[self handleScrollViewDidEnd:scrollView];
+    if (scrollView == theScrollView) {
+        [self handleScrollViewDidEnd:scrollView];
+    }
+}
+
+#pragma mark - UICollectionView Delegate
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self showDocumentPage:indexPath.row+1];
 }
 
 #pragma mark - UIGestureRecognizerDelegate methods
@@ -605,9 +625,10 @@
 			{
 				if ([lastHideTime timeIntervalSinceNow] < -0.75) // Delay since hide
 				{
-					if ((mainToolbar.alpha < 1.0f) || (mainPagebar.alpha < 1.0f)) // Hidden
+					if ((mainToolbar.alpha < 1.0f) || (mainCollection.alpha < 1.0f)) // Hidden
 					{
-						[mainToolbar showToolbar]; [mainPagebar showPagebar]; // Show
+						[mainToolbar showToolbar];
+                        [mainCollection showPagebar]; // Show
 					}
 				}
 			}
@@ -689,7 +710,7 @@
 
 - (void)contentView:(ReaderContentView *)contentView touchesBegan:(NSSet *)touches
 {
-	if ((mainToolbar.alpha > 0.0f) || (mainPagebar.alpha > 0.0f))
+	if ((mainToolbar.alpha > 0.0f) || (mainCollection.alpha > 0.0f))
 	{
 		if (touches.count == 1) // Single touches only
 		{
@@ -702,7 +723,7 @@
 			if (CGRectContainsPoint(areaRect, point) == false) return;
 		}
 
-		[mainToolbar hideToolbar]; [mainPagebar hidePagebar]; // Hide
+		[mainToolbar hideToolbar]; [mainCollection hidePagebar]; // Hide
 
 		lastHideTime = [NSDate date]; // Set last hide time
 	}
@@ -881,13 +902,6 @@
 	[self dismissViewControllerAnimated:NO completion:NULL];
 
 #endif // end of READER_ENABLE_THUMBS Option
-}
-
-#pragma mark - ReaderMainPagebarDelegate methods
-
-- (void)pagebar:(ReaderMainPagebar *)pagebar gotoPage:(NSInteger)page
-{
-	[self showDocumentPage:page];
 }
 
 #pragma mark - UIApplication notification methods
